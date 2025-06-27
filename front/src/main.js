@@ -4,6 +4,7 @@ import piniaPersistedstate from 'pinia-plugin-persistedstate'
 import router from './router'
 import App from './App.vue'
 import '@fortawesome/fontawesome-free/css/all.css'
+import './assets/tailwind.css'
 
 const app = createApp(App)
 

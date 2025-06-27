@@ -1,5 +1,5 @@
 <template>
-  <div class="home-content">
+  <div class="text-center">
     <p v-if="userStore.user">Welcome, {{ userStore.user.name }}</p>
     <signin-button :user="userStore.user" @userChanged="$emit('userChanged', $event)" />
   </div>
