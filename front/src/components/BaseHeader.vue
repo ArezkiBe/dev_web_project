@@ -15,6 +15,13 @@
             <span>Conversations</span>
           </base-button>
         </router-link>
+
+        <router-link v-if="userStore.user" to="/parcours">
+          <base-button>
+            <i class="fas fa-route"></i>
+            <span>Parcours</span>
+          </base-button>
+        </router-link>
       </div>
 
       <div class="right">
