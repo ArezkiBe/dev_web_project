@@ -1,6 +1,7 @@
 @import './base.css';
 
-#app {
+/* Styles pour la page d'accueil uniquement */
+.home-layout {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -27,7 +28,7 @@ a,
     place-items: center;
   }
 
-  #app {
+  .home-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;

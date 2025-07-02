@@ -3,16 +3,10 @@ import HomePage from '../views/HomePage.vue'
 import ConversationsIndexPage from '../views/ConversationsIndexPage.vue'
 import ConversationShowPage from '../views/ConversationShowPage.vue'
 import ParcoursPage from '../views/ParcoursPage.vue'
+import ParcoursDetailPage from '../views/ParcoursDetailPage.vue'
 
 import { useUserStore } from '../stores/user'
 import { getActivePinia } from 'pinia'
-
-const routes = [
-  { path: '/', component: HomePage },
-  { path: '/parcours', component: ParcoursPage },
-  { path: '/conversations', component: ConversationsIndexPage },
-  { path: '/conversations/:id', component: ConversationShowPage }
-]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +20,11 @@ const router = createRouter({
       path: '/parcours',
       name: 'parcours',
       component: ParcoursPage
+    },
+    {
+      path: '/parcours/:id',
+      name: 'parcours-detail',
+      component: ParcoursDetailPage
     },
     {
       path: '/conversations',
