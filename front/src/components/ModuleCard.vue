@@ -4,12 +4,12 @@
       <!-- Module Number and Status -->
       <div class="flex-shrink-0">
         <div class="flex items-center justify-center w-12 h-12 rounded-full" :class="statusBadgeClass">
-          <span v-if="module.status === 'completed'" class="text-white">
+          <span v-if="module.statut === 'completed'" class="text-white">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
           </span>
-          <span v-else-if="module.status === 'in-progress'" class="text-white font-semibold">
+          <span v-else-if="module.statut === 'in-progress'" class="text-white font-semibold">
             {{ index }}
           </span>
           <span v-else class="text-gray-500 font-semibold">
@@ -132,7 +132,7 @@ defineEmits(['toggle-status', 'edit', 'delete'])
 const showDropdown = ref(false)
 
 const statusBadgeClass = computed(() => {
-  switch (props.module.status) {
+  switch (props.module.statut) {
     case 'completed':
       return 'bg-green-500'
     case 'in-progress':
@@ -143,7 +143,7 @@ const statusBadgeClass = computed(() => {
 })
 
 const statusTextClass = computed(() => {
-  switch (props.module.status) {
+  switch (props.module.statut) {
     case 'completed':
       return 'bg-green-100 text-green-800'
     case 'in-progress':
@@ -154,7 +154,7 @@ const statusTextClass = computed(() => {
 })
 
 const statusText = computed(() => {
-  switch (props.module.status) {
+  switch (props.module.statut) {
     case 'completed':
       return 'Terminé'
     case 'in-progress':
@@ -165,7 +165,7 @@ const statusText = computed(() => {
 })
 
 const statusButtonClass = computed(() => {
-  switch (props.module.status) {
+  switch (props.module.statut) {
     case 'completed':
       return 'border-green-300 text-green-700 hover:bg-green-50'
     case 'in-progress':
@@ -176,7 +176,7 @@ const statusButtonClass = computed(() => {
 })
 
 const statusButtonText = computed(() => {
-  switch (props.module.status) {
+  switch (props.module.statut) {
     case 'completed':
       return 'Recommencer'
     case 'in-progress':
@@ -190,7 +190,7 @@ const isOverdue = computed(() => {
   if (!props.module.dateCible) return false
   const targetDate = new Date(props.module.dateCible)
   const today = new Date()
-  return today > targetDate && props.module.status !== 'completed'
+  return today > targetDate && props.module.statut !== 'completed'
 })
 
 function formatDate(dateString) {

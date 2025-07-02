@@ -62,7 +62,7 @@
         <div class="flex space-x-4">
           <label class="flex items-center">
             <input
-              v-model="formData.status"
+              v-model="formData.statut"
               type="radio"
               value="not-started"
               class="mr-2 text-blue-600 focus:ring-blue-500"
@@ -71,7 +71,7 @@
           </label>
           <label class="flex items-center">
             <input
-              v-model="formData.status"
+              v-model="formData.statut"
               type="radio"
               value="in-progress"
               class="mr-2 text-blue-600 focus:ring-blue-500"
@@ -80,7 +80,7 @@
           </label>
           <label class="flex items-center">
             <input
-              v-model="formData.status"
+              v-model="formData.statut"
               type="radio"
               value="completed"
               class="mr-2 text-blue-600 focus:ring-blue-500"
@@ -132,7 +132,7 @@ const formData = ref({
   lienExterne: '',
   dateDebut: '',
   dateCible: '',
-  status: 'not-started'
+  statut: 'not-started'
 })
 
 const loading = ref(false)
@@ -151,7 +151,7 @@ function resetForm() {
     lienExterne: '',
     dateDebut: '',
     dateCible: '',
-    status: 'not-started'
+    statut: 'not-started'
   }
   error.value = null
   loading.value = false

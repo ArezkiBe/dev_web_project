@@ -51,9 +51,10 @@ const authenticate = async (req: AuthenticatedRequest, res: Response, next: Next
 app.use(authenticate);
 
 
-app.get('/parcours', async (req: AuthenticatedRequest, res: Response) => {
+app.get('/parcours', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const parcours = await prisma.parcours.findMany({
         where: { userId: req.user.id },
@@ -62,9 +63,10 @@ app.get('/parcours', async (req: AuthenticatedRequest, res: Response) => {
     res.json(parcours);
 });
 
-app.post('/parcours', async (req: AuthenticatedRequest, res: Response) => {
+app.post('/parcours', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { titre, description, objectifs } = req.body;
     const newParcours = await prisma.parcours.create({
@@ -78,9 +80,10 @@ app.post('/parcours', async (req: AuthenticatedRequest, res: Response) => {
     res.status(201).json(newParcours);
 });
 
-app.get('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => {
+app.get('/parcours/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { id } = req.params;
     const parcours = await prisma.parcours.findFirst({
@@ -88,14 +91,16 @@ app.get('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => {
         include: { modules: true },
     });
     if (!parcours) {
-        return res.status(404).json({ error: 'Parcours not found' });
+        res.status(404).json({ error: 'Parcours not found' });
+        return;
     }
     res.json(parcours);
 });
 
-app.put('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => {
+app.put('/parcours/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { id } = req.params;
     const { titre, description, objectifs } = req.body;
@@ -110,7 +115,8 @@ app.put('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => {
         });
 
         if (updatedParcours.count === 0) {
-             return res.status(404).json({ error: 'Parcours not found or user not authorized' });
+             res.status(404).json({ error: 'Parcours not found or user not authorized' });
+             return;
         }
         
         const parcours = await prisma.parcours.findUnique({where: {id}});
@@ -121,9 +127,10 @@ app.put('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => {
     }
 });
 
-app.delete('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => {
+app.delete('/parcours/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { id } = req.params;
     try {
@@ -132,7 +139,8 @@ app.delete('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => 
         });
 
         if (result.count === 0) {
-            return res.status(404).json({ error: 'Parcours not found or user not authorized' });
+            res.status(404).json({ error: 'Parcours not found or user not authorized' });
+            return;
         }
 
         res.status(204).send();
@@ -143,9 +151,10 @@ app.delete('/parcours/:id', async (req: AuthenticatedRequest, res: Response) => 
 
 
 // Module Routes
-app.post('/parcours/:parcoursId/modules', async (req: AuthenticatedRequest, res: Response) => {
+app.post('/parcours/:parcoursId/modules', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { parcoursId } = req.params;
     const { titre, lienExterne, dateDebut, dateCible, statut } = req.body;
@@ -155,7 +164,8 @@ app.post('/parcours/:parcoursId/modules', async (req: AuthenticatedRequest, res:
     });
 
     if(!parcours){
-        return res.status(404).json({ error: 'Parcours not found or user not authorized' });
+        res.status(404).json({ error: 'Parcours not found or user not authorized' });
+        return;
     }
 
     const newModule = await prisma.module.create({
@@ -171,9 +181,10 @@ app.post('/parcours/:parcoursId/modules', async (req: AuthenticatedRequest, res:
     res.status(201).json(newModule);
 });
 
-app.put('/modules/:id', async (req: AuthenticatedRequest, res: Response) => {
+app.put('/modules/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { id } = req.params;
     const { titre, lienExterne, dateDebut, dateCible, statut } = req.body;
@@ -185,7 +196,8 @@ app.put('/modules/:id', async (req: AuthenticatedRequest, res: Response) => {
         });
 
         if (!moduleToUpdate || moduleToUpdate.parcours.userId !== req.user.id) {
-            return res.status(404).json({ error: 'Module not found or user not authorized' });
+            res.status(404).json({ error: 'Module not found or user not authorized' });
+            return;
         }
 
         const updatedModule = await prisma.module.update({
@@ -204,9 +216,10 @@ app.put('/modules/:id', async (req: AuthenticatedRequest, res: Response) => {
     }
 });
 
-app.delete('/modules/:id', async (req: AuthenticatedRequest, res: Response) => {
+app.delete('/modules/:id', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { id } = req.params;
 
@@ -217,7 +230,8 @@ app.delete('/modules/:id', async (req: AuthenticatedRequest, res: Response) => {
         });
 
         if (!moduleToDelete || moduleToDelete.parcours.userId !== req.user.id) {
-            return res.status(404).json({ error: 'Module not found or user not authorized' });
+            res.status(404).json({ error: 'Module not found or user not authorized' });
+            return;
         }
 
         await prisma.module.delete({
@@ -231,16 +245,18 @@ app.delete('/modules/:id', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // User info route
-app.get('/user/me', (req: AuthenticatedRequest, res: Response) => {
+app.get('/user/me', (req: AuthenticatedRequest, res: Response): void => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     res.json(req.user);
 });
 
-app.put('/user/me', async (req: AuthenticatedRequest, res: Response) => {
+app.put('/user/me', async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
     }
     const { nom, email } = req.body;
     try {
@@ -255,7 +271,8 @@ app.put('/user/me', async (req: AuthenticatedRequest, res: Response) => {
     } catch (error) {
         // P5002: Unique constraint failed
         if ((error as any).code === 'P2002' && (error as any).meta?.target?.includes('email')) {
-             return res.status(409).json({ error: 'Email already in use.'})
+             res.status(409).json({ error: 'Email already in use.'});
+             return;
         }
         res.status(500).json({ error: 'Failed to update user' });
     }

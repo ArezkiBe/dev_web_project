@@ -139,7 +139,7 @@
               :index="index + 1"
               @toggle-status="toggleModuleStatus"
               @edit="editModule"
-              @delete="deleteModule"
+              @delete="deleteModuleHandler"
             />
           </div>
         </div>
@@ -158,6 +158,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getParcoursById, createModule, updateModule, deleteModule } from '../services/parcours'
 import Button from '../components/ui/Button.vue'
 import ModuleCard from '../components/ModuleCard.vue'
 import AddModuleModal from '../components/AddModuleModal.vue'
@@ -175,12 +176,12 @@ const showAddModuleModal = ref(false)
 // Computed
 const progressPercentage = computed(() => {
   if (modules.value.length === 0) return 0
-  const completedCount = modules.value.filter(module => module.status === 'completed').length
+  const completedCount = modules.value.filter(module => module.statut === 'completed').length
   return Math.round((completedCount / modules.value.length) * 100)
 })
 
 const completedModulesCount = computed(() => {
-  return modules.value.filter(module => module.status === 'completed').length
+  return modules.value.filter(module => module.statut === 'completed').length
 })
 
 // Methods
@@ -188,44 +189,10 @@ async function fetchParcours() {
   loading.value = true
   error.value = null
   try {
-    // TODO: Remplacer par l'API réelle
-    // Pour l'instant, on simule un parcours
     const parcoursId = route.params.id
-    parcours.value = {
-      id: parcoursId,
-      titre: 'Parcours de démonstration',
-      description: 'Ceci est un parcours de démonstration pour tester l\'interface',
-      objectifs: 'Apprendre à utiliser la plateforme de formation',
-      createdAt: new Date().toISOString()
-    }
-    
-    // Modules simulés
-    modules.value = [
-      {
-        id: 1,
-        titre: 'Introduction',
-        lienExterne: 'https://example.com/intro',
-        dateDebut: '2024-01-15',
-        dateCible: '2024-01-20',
-        status: 'completed'
-      },
-      {
-        id: 2,
-        titre: 'Concepts de base',
-        lienExterne: 'https://example.com/basics',
-        dateDebut: '2024-01-21',
-        dateCible: '2024-01-25',
-        status: 'in-progress'
-      },
-      {
-        id: 3,
-        titre: 'Pratique avancée',
-        lienExterne: 'https://example.com/advanced',
-        dateDebut: '2024-01-26',
-        dateCible: '2024-01-30',
-        status: 'not-started'
-      }
-    ]
+    const data = await getParcoursById(parcoursId)
+    parcours.value = data
+    modules.value = data.modules || []
   } catch (err) {
     error.value = err.message
   } finally {
@@ -237,45 +204,61 @@ function goBack() {
   router.push('/parcours')
 }
 
-function toggleModuleStatus(moduleId) {
+async function toggleModuleStatus(moduleId) {
   const module = modules.value.find(m => m.id === moduleId)
   if (!module) return
   
+  let newStatus
   // Cycle through statuses: not-started -> in-progress -> completed -> not-started
-  switch (module.status) {
+  switch (module.statut) {
     case 'not-started':
-      module.status = 'in-progress'
+      newStatus = 'in-progress'
       break
     case 'in-progress':
-      module.status = 'completed'
+      newStatus = 'completed'
       break
     case 'completed':
-      module.status = 'not-started'
+      newStatus = 'not-started'
       break
     default:
-      module.status = 'not-started'
+      newStatus = 'not-started'
+  }
+
+  try {
+    await updateModule(moduleId, { ...module, statut: newStatus })
+    module.statut = newStatus
+  } catch (err) {
+    console.error('Erreur lors de la mise à jour du statut:', err)
+    error.value = 'Erreur lors de la mise à jour du statut du module'
   }
 }
 
 function editModule(moduleId) {
-  // TODO: Implémenter l'édition de module
+  // TODO: Implémenter l'édition de module avec un modal
   console.log('Edit module:', moduleId)
 }
 
-function deleteModule(moduleId) {
+async function deleteModuleHandler(moduleId) {
   if (confirm('Êtes-vous sûr de vouloir supprimer ce module ?')) {
-    modules.value = modules.value.filter(m => m.id !== moduleId)
+    try {
+      await deleteModule(moduleId)
+      modules.value = modules.value.filter(m => m.id !== moduleId)
+    } catch (err) {
+      console.error('Erreur lors de la suppression:', err)
+      error.value = 'Erreur lors de la suppression du module'
+    }
   }
 }
 
-function handleAddModule(moduleData) {
-  const newModule = {
-    id: Date.now(), // Temporary ID
-    ...moduleData,
-    status: 'not-started'
+async function handleAddModule(moduleData) {
+  try {
+    const newModule = await createModule(parcours.value.id, moduleData)
+    modules.value.push(newModule)
+    showAddModuleModal.value = false
+  } catch (err) {
+    console.error('Erreur lors de la création du module:', err)
+    error.value = 'Erreur lors de la création du module'
   }
-  modules.value.push(newModule)
-  showAddModuleModal.value = false
 }
 
 function formatDate(dateString) {

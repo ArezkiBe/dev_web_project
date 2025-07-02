@@ -276,7 +276,7 @@ function getModuleCount(parcours) {
 }
 
 function getCompletedModules(parcours) {
-  return parcours.modules?.filter(module => module.status === 'completed').length || 0
+  return parcours.modules?.filter(module => module.statut === 'completed').length || 0
 }
 
 function getProgressPercentage(parcours) {
