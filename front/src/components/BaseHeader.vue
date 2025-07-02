@@ -1,38 +1,27 @@
 <template>
-  <header>
-    <nav>
-      <div class="left">
+  <header class="bg-emerald-600 text-white shadow-md">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-4">
         <router-link to="/">
-          <base-button>
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-          </base-button>
-        </router-link>
-
-        <router-link v-if="userStore.user" to="/conversations">
-          <base-button>
-            <i class="fas fa-envelope"></i>
-            <span>Conversations</span>
-          </base-button>
+          <BaseButton>
+            <span>Accueil</span>
+          </BaseButton>
         </router-link>
 
         <router-link v-if="userStore.user" to="/parcours">
-          <base-button>
-            <i class="fas fa-route"></i>
+          <BaseButton>
             <span>Parcours</span>
-          </base-button>
+          </BaseButton>
         </router-link>
       </div>
 
-      <div class="right">
-        <base-button v-if="userStore.user" @click="handleSignOut">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Logout</span>
-        </base-button>
-        <base-button v-else>
-          <i class="fas fa-user"></i>
-          <span>Not yet logged-in</span>
-        </base-button>
+      <div>
+        <BaseButton v-if="userStore.user" color="warn" @click="handleSignOut">
+          <span>Déconnexion</span>
+        </BaseButton>
+        <BaseButton v-else color="danger">
+          <span>Non connecté</span>
+        </BaseButton>
       </div>
     </nav>
   </header>
@@ -42,34 +31,14 @@
 import BaseButton from './BaseButton.vue'
 import { useUserStore } from '../stores/user'
 import { signOut } from '../lib/microsoftGraph'
-
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
+const router = useRouter()
+
 function handleSignOut() {
   signOut()
   userStore.clearUser()
+  router.push('/') // redirection vers la page d’accueil
 }
 </script>
-
-
-<style scoped>
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #2db48b;
-  color: black;
-  padding: 0.6rem 1rem;
-}
-.left, .right {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-i {
-  font-size: 1rem;
-}
-a {
-  text-decoration: none;
-}
-</style>

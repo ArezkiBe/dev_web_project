@@ -1,7 +1,10 @@
 <template>
   <button
-    class="base-button"
-    :class="buttonClass"
+    :class="[
+      'inline-flex items-center gap-2 font-semibold text-white px-4 py-2 rounded-xl shadow-sm transition-colors duration-200',
+      colorClass,
+      disabled ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-110'
+    ]"
     :disabled="disabled"
     v-bind="$attrs"
   >
@@ -9,68 +12,27 @@
   </button>
 </template>
 
-<script>
-export default {
-  name: "BaseButton",
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    color: {
-      type: String,
-      default: 'primary',
-      validator: value => ['primary', 'warn', 'danger'].includes(value)
-    }
+<script setup>
+import { computed } from 'vue'
+import { defineProps } from 'vue'
+
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false
   },
-  inheritAttrs: false,
-  computed: {
-    buttonClass() {
-      return `color-${this.color}`
-    }
+  color: {
+    type: String,
+    default: 'primary',
+    validator: (value) => ['primary', 'warn', 'danger'].includes(value)
   }
-}
+})
+
+const colorClass = computed(() => {
+  return {
+    primary: 'bg-emerald-600',
+    warn: 'bg-yellow-500',
+    danger: 'bg-red-600'
+  }[props.color] || 'bg-emerald-600'
+})
 </script>
-
-<style scoped>
-.base-button {
-  border: none;
-  padding: 0.5rem 1rem;
-  color: white;
-  font-weight: bold;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.color-primary {
-  background-color: #2db48b;
-}
-.color-primary:hover:not(:disabled),
-.color-primary:focus:not(:disabled) {
-  background-color: #249d76;
-}
-
-.color-warn {
-  background-color: #ffb522;
-}
-.color-warn:hover:not(:disabled),
-.color-warn:focus:not(:disabled) {
-  background-color: #ff9f00;
-}
-
-.color-danger {
-  background-color: #e53935;
-}
-.color-danger:hover:not(:disabled),
-.color-danger:focus:not(:disabled) {
-  background-color: #d32f2f;
-}
-
-/* Désactivé */
-.base-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-  color: #666;
-}
-</style>
