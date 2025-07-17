@@ -1,7 +1,6 @@
 <template>
   <Card class="relative transition-all duration-200 hover:shadow-md">
     <div class="flex items-start gap-4">
-      <!-- Module Number and Status -->
       <div class="flex-shrink-0">
         <div class="flex items-center justify-center w-12 h-12 rounded-full" :class="statusBadgeClass">
           <span v-if="module.statut === 'completed'" class="text-white">
@@ -18,18 +17,15 @@
         </div>
       </div>
 
-      <!-- Module Content -->
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between">
           <div class="flex-1">
             <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ module.titre }}</h3>
             
-            <!-- Status Badge -->
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mb-3" :class="statusTextClass">
               {{ statusText }}
             </span>
 
-            <!-- Link -->
             <div v-if="module.lienExterne" class="mb-3">
               <a 
                 :href="module.lienExterne" 
@@ -44,7 +40,6 @@
               </a>
             </div>
 
-            <!-- Dates -->
             <div class="flex items-center space-x-4 text-sm text-gray-600">
               <div v-if="module.dateDebut" class="flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +57,6 @@
             </div>
           </div>
 
-          <!-- Action Buttons -->
           <div class="flex items-center space-x-2 ml-4">
             <Button 
               @click="$emit('toggle-status', module.id)" 
@@ -85,7 +79,6 @@
                 </svg>
               </Button>
               
-              <!-- Dropdown Menu -->
               <div v-if="showDropdown" 
                    class="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10"
                    @click="showDropdown = false"

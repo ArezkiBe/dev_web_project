@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../views/HomePage.vue'
-import ConversationsIndexPage from '../views/ConversationsIndexPage.vue'
-import ConversationShowPage from '../views/ConversationShowPage.vue'
 import ParcoursPage from '../views/ParcoursPage.vue'
 import ParcoursDetailPage from '../views/ParcoursDetailPage.vue'
+import CalendarPage from '../views/CalendarPage.vue'
 
 import { useUserStore } from '../stores/user'
 import { getActivePinia } from 'pinia'
@@ -27,14 +26,9 @@ const router = createRouter({
       component: ParcoursDetailPage
     },
     {
-      path: '/conversations',
-      name: 'conversations',
-      component: ConversationsIndexPage
-    },
-    {
-      path: '/conversations/:id',
-      name: 'conversation',
-      component: ConversationShowPage
+      path: '/calendar',
+      name: 'calendar',
+      component: CalendarPage
     }
   ]
 })
@@ -45,7 +39,7 @@ router.beforeEach((to, from, next) => {
 
   const userStore = useUserStore(pinia)
 
-  const requiresAuth = to.path.startsWith('/conversations') || to.path.startsWith('/parcours')
+  const requiresAuth = to.path.startsWith('/conversations') || to.path.startsWith('/parcours') || to.path.startsWith('/calendar')
 
   if (requiresAuth && !userStore.user) {
     return next('/')

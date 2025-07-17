@@ -13,6 +13,12 @@
             <span>Parcours</span>
           </BaseButton>
         </router-link>
+
+        <router-link v-if="userStore.user" to="/calendar">
+          <BaseButton>
+            <span>Calendrier</span>
+          </BaseButton>
+        </router-link>
       </div>
 
       <div>
@@ -39,6 +45,6 @@ const router = useRouter()
 function handleSignOut() {
   signOut()
   userStore.clearUser()
-  router.push('/') // redirection vers la page d’accueil
+  router.push('/')
 }
 </script>

@@ -2,7 +2,6 @@ import { useUserStore } from '../stores/user'
 
 const API_URL = 'http://localhost:3000'
 
-// Mapping des statuts entre frontend et backend
 const STATUS_TO_PRISMA = {
   'not-started': 'A_FAIRE',
   'in-progress': 'EN_COURS',
@@ -57,7 +56,6 @@ export async function getParcours() {
   }
   const parcours = await response.json()
   
-  // Convertir les statuts des modules pour chaque parcours
   return parcours.map(p => ({
     ...p,
     modules: p.modules ? p.modules.map(convertModuleFromAPI) : []
@@ -72,7 +70,6 @@ export async function getParcoursById(id) {
   }
   const parcours = await response.json()
   
-  // Convertir les statuts des modules
   return {
     ...parcours,
     modules: parcours.modules ? parcours.modules.map(convertModuleFromAPI) : []

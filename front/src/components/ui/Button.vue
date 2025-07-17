@@ -62,14 +62,12 @@ const buttonClass = computed(() => {
       variant: props.variant,
       size: props.size
     }),
-    // Forcer les styles pour éviter les conflits CSS
     'box-border'
   )
 })
 </script>
 
 <style scoped>
-/* Styles spécifiques pour forcer les propriétés si nécessaire */
 button {
   margin: 0 !important;
   box-sizing: border-box !important;

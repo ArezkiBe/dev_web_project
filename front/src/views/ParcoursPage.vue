@@ -102,7 +102,6 @@
         </div>
       </div>
 
-      <!-- Loading State -->
       <div v-if="loading" class="flex items-center justify-center py-12">
         <div class="flex items-center space-x-2">
           <svg class="animate-spin h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24">
@@ -113,7 +112,6 @@
         </div>
       </div>
 
-      <!-- Error State -->
       <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
         <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -125,7 +123,6 @@
         </Button>
       </div>
 
-      <!-- Empty State -->
       <div v-else-if="!loading && filteredParcours.length === 0 && parcoursList.length === 0" class="text-center py-12">
         <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
@@ -137,7 +134,6 @@
         </Button>
       </div>
 
-      <!-- No Search Results -->
       <div v-else-if="!loading && filteredParcours.length === 0 && parcoursList.length > 0" class="text-center py-12">
         <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -181,7 +177,6 @@ import CreateParcoursModal from '../components/CreateParcoursModal.vue'
 
 const router = useRouter()
 
-// Data
 const parcoursList = ref([])
 const loading = ref(false)
 const error = ref(null)
@@ -189,11 +184,9 @@ const showCreateModal = ref(false)
 const searchQuery = ref('')
 const selectedFilter = ref('all')
 
-// Computed
 const filteredParcours = computed(() => {
   let filtered = parcoursList.value
 
-  // Filter by search query
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(parcours => 
@@ -203,7 +196,6 @@ const filteredParcours = computed(() => {
     )
   }
 
-  // Filter by status
   if (selectedFilter.value !== 'all') {
     filtered = filtered.filter(parcours => {
       const progress = getProgressPercentage(parcours)
@@ -238,7 +230,6 @@ const averageProgress = computed(() => {
   return Math.round(totalProgress / parcoursList.value.length)
 })
 
-// Methods
 async function fetchParcours() {
   loading.value = true
   error.value = null
@@ -270,7 +261,6 @@ function clearFilters() {
   selectedFilter.value = 'all'
 }
 
-// Helper functions for modules (to be implemented when modules are added)
 function getModuleCount(parcours) {
   return parcours.modules?.length || 0
 }
@@ -286,12 +276,10 @@ function getProgressPercentage(parcours) {
   return Math.round((completedModules / moduleCount) * 100)
 }
 
-// Lifecycle
 onMounted(fetchParcours)
 </script>
 
 <style scoped>
-/* Forcer les marges et espacements pour éviter les conflits CSS */
 .container {
   margin: 0 auto !important;
   padding-left: 1rem !important;

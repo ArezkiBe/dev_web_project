@@ -87,7 +87,6 @@ const formData = ref({
 const loading = ref(false)
 const error = ref(null)
 
-// Reset form when modal closes
 watch(() => props.open, (newOpen) => {
   if (!newOpen) {
     resetForm()

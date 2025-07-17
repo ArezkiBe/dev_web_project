@@ -11,7 +11,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-// Pas de props spécifiques pour ce composant de base
-</script> 

@@ -1,7 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-4 py-8">
-      <!-- Loading State -->
       <div v-if="loading" class="flex items-center justify-center py-12">
         <div class="flex items-center space-x-2">
           <svg class="animate-spin h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24">
@@ -12,7 +11,6 @@
         </div>
       </div>
 
-      <!-- Error State -->
       <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
         <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -29,9 +27,7 @@
         </div>
       </div>
 
-      <!-- Parcours Content -->
       <div v-else-if="parcours">
-        <!-- Header with breadcrumb -->
         <nav class="flex mb-8" aria-label="Breadcrumb">
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
@@ -56,7 +52,6 @@
           </ol>
         </nav>
 
-        <!-- Parcours Header -->
         <div class="bg-white rounded-lg shadow-sm border p-6 mb-8">
           <div class="flex items-start justify-between mb-4">
             <div class="flex-1">
@@ -112,13 +107,11 @@
           </div>
         </div>
 
-        <!-- Modules Section -->
         <div class="space-y-6">
           <div class="flex items-center justify-between">
             <h2 class="text-2xl font-semibold text-gray-900">Modules du parcours</h2>
           </div>
 
-          <!-- Empty State for Modules -->
           <div v-if="modules.length === 0" class="text-center py-12 bg-white rounded-lg border">
             <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
@@ -130,7 +123,6 @@
             </Button>
           </div>
 
-          <!-- Modules List -->
           <div v-else class="space-y-4">
             <ModuleCard
               v-for="(module, index) in modules"
@@ -146,7 +138,6 @@
       </div>
     </div>
 
-    <!-- Add Module Modal -->
     <AddModuleModal
       :open="showAddModuleModal"
       @update:open="showAddModuleModal = $event"
@@ -166,14 +157,12 @@ import AddModuleModal from '../components/AddModuleModal.vue'
 const route = useRoute()
 const router = useRouter()
 
-// Data
 const parcours = ref(null)
 const modules = ref([])
 const loading = ref(false)
 const error = ref(null)
 const showAddModuleModal = ref(false)
 
-// Computed
 const progressPercentage = computed(() => {
   if (modules.value.length === 0) return 0
   const completedCount = modules.value.filter(module => module.statut === 'completed').length
@@ -184,7 +173,6 @@ const completedModulesCount = computed(() => {
   return modules.value.filter(module => module.statut === 'completed').length
 })
 
-// Methods
 async function fetchParcours() {
   loading.value = true
   error.value = null
@@ -209,7 +197,6 @@ async function toggleModuleStatus(moduleId) {
   if (!module) return
   
   let newStatus
-  // Cycle through statuses: not-started -> in-progress -> completed -> not-started
   switch (module.statut) {
     case 'not-started':
       newStatus = 'in-progress'
@@ -234,7 +221,6 @@ async function toggleModuleStatus(moduleId) {
 }
 
 function editModule(moduleId) {
-  // TODO: Implémenter l'édition de module avec un modal
   console.log('Edit module:', moduleId)
 }
 
@@ -271,12 +257,10 @@ function formatDate(dateString) {
   })
 }
 
-// Lifecycle
 onMounted(fetchParcours)
 </script>
 
 <style scoped>
-/* Forcer les marges et espacements pour éviter les conflits CSS */
 .container {
   margin: 0 auto !important;
   padding-left: 1rem !important;

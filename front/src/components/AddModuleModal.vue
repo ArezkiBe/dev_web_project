@@ -138,7 +138,6 @@ const formData = ref({
 const loading = ref(false)
 const error = ref(null)
 
-// Reset form when modal closes
 watch(() => props.open, (newOpen) => {
   if (!newOpen) {
     resetForm()
@@ -160,7 +159,6 @@ function resetForm() {
 async function handleSubmit() {
   if (!formData.value.titre.trim()) return
   
-  // Validation des dates
   if (formData.value.dateDebut && formData.value.dateCible) {
     const dateDebut = new Date(formData.value.dateDebut)
     const dateCible = new Date(formData.value.dateCible)
